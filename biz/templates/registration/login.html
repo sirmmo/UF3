@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block content %}
+<div class="container">
+<form action="" method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-success">
+                Login
+            </button>
+            <a href="{% url "auth_password_reset" %}" class="btn btn-primary">Lost Password</a>
+            <a href="{% url "registration_register" %}" class="btn btn-primary">Register</a>
+        {% endbuttons %}
+    </form>
+    </div>
+{% endblock %}

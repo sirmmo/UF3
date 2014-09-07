@@ -1,16 +1,66 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Urban Fabric 3.0</title>
+{% extends "base.html" %}
+
+{%block js%}
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
 		<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+		<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-hash/v0.2.1/leaflet-hash.js'></script>
+		<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
 		<script>
-			var map = L.map('map').locate({setView:true});
+			var UF = {};
+			UF.resize = function(){
+				$("#map").height($(window).height()-$("header").height()-45-$("footer").height()-1);
+				$("#stuff").height($(window).height()-$("header").height()-45-$("footer").height()-1);
+			}
+
+			$(function(){
+				UF.resize();
+				$(window).resize(UF.resize);
+
+				UF.map = L.map('map',{ zoomControl: false });
+
+				if(window.location.hash == "")
+					UF.map.locate({setView:true});
+				UF.layers = {};
+				//UF.layers.stamen_toner = new L.StamenTileLayer("toner");
+				//UF.map.addLayer(UF.layers.stamen_toner);
+				
+				UF.layers.OSM = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+				    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+				});
+				UF.map.addLayer(UF.layers.OSM);
+
+				new L.Control.Zoom({ position: 'topright' }).addTo(UF.map);
+
+				UF.hash = L.hash(UF.map);
+
+				var geojsonMarkerOptions = {
+				    radius: 10,
+				    fillColor: "#ff7800",
+				    color: "#000",
+				    weight: 1,
+				    opacity: 1,
+				    fillOpacity: 0.8
+				};
+
+				$.getJSON("map.geojson", function(data){
+					L.geoJson(data,{
+						pointToLayer: function (feature, latlng) {
+					        return L.circleMarker(latlng, geojsonMarkerOptions);
+					    },
+					    onEachFeature: function(feature, layer) {
+						    // does this feature have a property named popupContent?
+						    if (feature.properties && feature.properties.name) {
+						        layer.bindPopup(feature.properties.name);
+						    }
+						}
+
+					}).addTo(UF.map);
+				});
+			});
+
 		</script>
-</head>
-<body>
-	<header></header>
+{% endblock js %}
+{% block content %}
 	<div id="map"></div>
-	<footer></footer>
-</body>
-</html>
+	<div id="stuff" class="hidden"></div>
+{% endblock %}

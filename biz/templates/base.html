@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Urban Fabric 3.0 - {{name}}</title>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css" rel="stylesheet">
+		
+
+		{% block js %}{% endblock %}
+
+		<style>
+			body{
+				padding-top: 45px; 
+				margin:0;
+			}
+			#map{
+				width:100%;
+			}
+
+			#stuff{
+				top: 45px; 
+				width: 400px;
+				position: absolute;
+				background-color: red;
+			}
+
+			footer{
+				background-color: white;
+				width: 100%;
+				border-top: 1px solid #222222;
+				text-align: center;
+			}
+		</style>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display --> 
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">UrbanFabric 3.0 - {{name}}</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-eye"></i>Visualizza<span class="caret"></span></a>
+							<ul class="dropdown-menu" role="menu">
+								{% for type in types %}
+								<li><a href="#">Action</a></li>
+								{% endfor %}
+							</ul>
+						</li>
+						<li><a href="/stats"><i class="fa fa-user fa-fw"></i>Statistiche</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i>Marco<span class="caret"></span></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#"><i class="fa fa-user fa-fw"></i>Profilo</a></li>
+								<li><a href="#"><i class="fa fa-bars fa-fw"></i>Modifica</a></li>
+								<li><a href="#"><i class="fa fa-plus fa-fw"></i>Aggiungi</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+	</header>
+	{% block content %}{% endblock %}
+	<footer>&copy; 2014 MMo.IT</footer>
+</body>
+</html>

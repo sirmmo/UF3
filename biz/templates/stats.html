@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block js %}
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://neue.cc/linq.min.js"></script>
+<link href="https://cdn.rawgit.com/masayuki0812/c3/master/c3.css" rel="stylesheet"></link>
+<script src="https://cdn.rawgit.com/masayuki0812/c3/master/c3.min.js"></script>
+<script>
+	$(function(){
+		$.getJSON("stats.json", function(the_data){
+			$("#basics_amount").text(the_data.length);
+			var en = Enumerable.From(the_data);
+
+			var c1_types = ["amenity", "office", "shop", "craft"].map(function(cv){ return [cv, en.Select("$.tag."+cv).Where("$!=undefined").Count()]});
+			var chart = c3.generate({
+	            bindto: '#c1',
+	            data: {
+					columns: c1_types,
+					type:'donut',
+	            },
+	           
+	            donut: {
+			        title: "Tipi di imprese"
+			    }
+	        });
+
+	        var c2_types = en.Select("$.tag.amenity").Where("$!=undefined").GroupBy(function(el){return el}, function(){}, function(el,grouping){return [el, grouping.Count()]}).ToArray()
+			var chart = c3.generate({
+	            bindto: '#c2',
+	            data: {
+					columns: c2_types,
+					type:'donut',
+	            },
+	           
+	            donut: {
+			        title: "Tipi di Strutture Ricettive"
+			    }
+	        });
+
+	        var c3_types = en.Select("$.tag.office").Where("$!=undefined").GroupBy(function(el){return el}, function(){}, function(el,grouping){return [el, grouping.Count()]}).ToArray()
+			var chart = c3.generate({
+	            bindto: '#c3',
+	            data: {
+					columns: c3_types,
+					type:'donut',
+	            },
+	           
+	            donut: {
+			        title: "Tipi di Uffici"
+			    }
+	        });
+
+	        var c4_types = en.Select("$.tag.shop").Where("$!=undefined").GroupBy(function(el){return el}, function(){}, function(el,grouping){return [el, grouping.Count()]}).ToArray()
+			var chart = c3.generate({
+	            bindto: '#c4',
+	            data: {
+					columns: c4_types,
+					type:'donut',
+	            },
+	           
+	            donut: {
+			        title: "Tipi di Negozi"
+			    }
+	        });
+
+	        var c5_types = en.Select("$.tag.craft").Where("$!=undefined").GroupBy(function(el){return el}, function(){}, function(el,grouping){return [el, grouping.Count()]}).ToArray()
+			var chart = c3.generate({
+	            bindto: '#c5',
+	            data: {
+					columns: c5_types,
+					type:'donut',
+	            },
+	           
+	            donut: {
+			        title: "Tipi di Artigiani"
+			    }
+	        });
+		});
+	});
+
+</script>
+{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="container">
+		<h1 id="t_c0">The Basics</h1>
+	</div>
+</div>
+<div class="container">
+	<div class="col-lg-12">
+		<h3><i class="fa fa-fw fa-line-chart"></i><span id="basics_amount"></span> imprese mappate.</h3>
+	</div>
+</div>
+
+<div class="jumbotron">
+	<div class="container">
+		<h1 id="t_c1">Stats</h1>
+	</div>
+</div>
+<div class="container">
+	<div id="c1" >
+	</div>
+</div>
+<div class="row">
+
+		<div class="jumbotron">
+			<div class="container">
+				<h2 id="t_c2">Strutture Ricettive</h2>
+			</div>
+		</div>
+		<div class="container">
+			<div id="c2"  >
+			</div>
+		</div>
+
+
+		<div class="jumbotron">
+			<div class="container">
+				<h2 id="t_c3">Uffici</h2>
+			</div>
+		</div>
+		<div class="container">
+			<div id="c3"  >
+			</div>
+		</div>
+
+		<div class="jumbotron">
+			<div class="container">
+				<h2 id="t_c4">Negozi</h2>
+			</div>
+		</div>
+		<div class="container">
+			<div id="c4"  >
+			</div>
+		</div>
+
+		<div class="jumbotron">
+			<div class="container">
+				<h2 id="t_c5">Artigiani</h2>
+			</div>
+		</div>
+		<div class="container">
+			<div id="c5"  >
+			</div>
+		</div>
+</div>
+{% endblock %}

@@ -1,6 +1,12 @@
 from django.shortcuts import render
 from django import forms
 
+from django.http import HttpResponse
+
+from osmapi import OsmApi
+from django.conf import settings
+from biz.models import * 
+
 # THE MAGIC http://taginfo.openstreetmap.org/api/4/key/values?key=shop&page=1&rp=10&sortname=count_ways&sortorder=desc&query=stor
 
 class AddressForm(forms.Form):
@@ -42,14 +48,14 @@ class InternetForm(forms.Form):
 	wifi_access_ssid= forms.CharField(max_length=100)
 
 class CashPaymentForm(forms.Form):
-	payment_coins = forms.BooleanField(default = True)
-	payment_notes = forms.BooleanField(default = True)
-	payment_cash = forms.BooleanField(default = True)
-	currency_eur = forms.BooleanField(default = True)
-	currency_others = forms.BooleanField(default = False)
+	payment_coins = forms.BooleanField()
+	payment_notes = forms.BooleanField()
+	payment_cash = forms.BooleanField()
+	currency_eur = forms.BooleanField()
+	currency_others = forms.BooleanField()
 
 class CardPaymentForm(forms.Form):
-	payment_credit_cards = forms.BooleanField(default = True)
+	payment_credit_cards = forms.BooleanField()
 	payment_mastercard = forms.BooleanField()
 	payment_visa = forms.BooleanField()
 	payment_diners_club = forms.BooleanField()
@@ -78,12 +84,86 @@ class CraftForm(forms.Form):
 class AmenityForm(forms.Form):
 	amenity_type = forms.ChoiceField(choices = [])
 
-def choices(request):
-	pass
 
 
-
-
-def map(request):
+def index(request):
 	return render(request, "map.html")
+
+def stats(request):
+	return render(request, "stats.html")
+
+def business_info(request, business_id):
+	return render(request, "business.html", {"business":Business.objects.get(id=business_id)})	
+
+def geojson(request):
+	ret = []
+	for b in Business.objects.all():
+		data = json.loads(b.cached)
+		to_add = {
+		  "type": "Feature",
+		  "geometry": {
+		    "type": "Point",
+		    "coordinates": [data["lon"], data["lat"]]
+		  },
+		  "properties": data["tag"],
+		  "id":data["uid"]
+		}
+		ret.append(to_add)
+
+	return HttpResponse(json.dumps({"type":"FeatureCollection", "features":ret}))
+
+def complex(request):
+	ret = []
+	for b in Business.objects.all():
+		ret.append(json.loads(b.cached))
+	return HttpResponse(json.dumps(ret))
+
+def add(request):
+	if request.method == "GET":
+		return render(request, "add_point.html")
+	else:
+		pass
+
+
+def put_point(request):
+	api = OsmApi()
+	api = OsmApi.OsmApi(username = settings.OSM_USER, password = settings.OSM_PASSWORD)
+	api.ChangesetCreate({"comment": "Urban Fabric Node Creation"})
+	res =api.NodeCreate({"lon":float(request.REQUEST.get("lng")), "lat":float(request.REQUEST.get("lat")), "tag": {"name":request.REQUEST.get("name"), 	}})
+	api.ChangesetClose()
+	b = Business()
+	b.osm_id = res["id"]
+	b.owner = request.user
+	b.save()
+
+	return HttpResponseRedirect("/edit/"+b.id)
+
+def edit(request, business_id):
+	b = Business.objects.get(id=business_id)
+	return render("editor.html", {"business":b})
+
+def upload(request, business_id):
+	b = Business.objects.get(id=business_id)
+
+	new_tags = json.loads(request.REQUEST.get("data", b.j["tag"]))
+	cs = api.ChangesetCreate({"comment": "Urban Fabric Node Update"})
+	api = OsmApi.OsmApi(username = settings.OSM_USER, password = settings.OSM_PASSWORD)
+	data = api.NodeGet(b.osm_id)
+	data = api.NodeUpdate(b.osm_id, data["lat"], data["lng"], new_tags, cs, int(data["version"])+1)
+	api.ChangesetClose()
+
+	return HttpResponseRedirect("/edit/"+b.id)
+
+
+
+
+#API
+
+from oauth2_provider.decorators import protected_resource
+
+@protected_resource()
+def business_details(request, business_id):
+	b = Business.objects.get(id=business_id)
+	return HttpResponse(json.dumps(b))
+
 

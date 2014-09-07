@@ -1,0 +1,9 @@
+
+OSM_USER = "sirmmo+uf3@gmail.com"
+
+OSM_PASSWORD = "mmommommo"
+
+
+
+SOCIAL_AUTH_TWITTER_KEY = 'epcu2WLxge5Rn7oBZ7UCv7vEn'
+SOCIAL_AUTH_TWITTER_SECRET = 'CRd6y3wq0j0pHX43JcxlrJ9SIty4E5suWBhDCVJxvEsFLOXJCl'
