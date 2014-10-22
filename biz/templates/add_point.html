@@ -54,7 +54,7 @@
 <div class="container">
 
 	<h1>Informazioni generali</h1>
-	<form method="GET" action="/add">
+	<form method="POST" action="/add">
 	{% csrf_token %}
 		<div class="form-group">
 			<label for="name">Nome</label>
@@ -65,8 +65,8 @@
 			<label for="map">Dove si trova l'impresa?</label>
 			
 			<div id="map"></div>
-			<input type="hidden" class="form-control" value="" id="lng">
-			<input type="hidden" class="form-control" value="" id="lat">
+			<input type="hidden" class="form-control" value="" name="lng" id="lng">
+			<input type="hidden" class="form-control" value="" name="lat" id="lat">
 		
 
 		</div>

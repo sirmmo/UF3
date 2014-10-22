@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block js %}
+
+		<script>
+
+			var b_data = {{business.safej|safe}};
+
+			$(function(){
+				$(".form-control").each(function(e,i){
+					$(this).val(b_data["tag"][$(this).data("osmfield")]);
+				});
+			})
+			function update(){
+				var data = {};
+				$(".form-control").each(function(e,i){
+					var f = $(this).data("osmfield");
+					var v = $(this).val();
+					if (v != "")
+						data[f]	= v;
+				});
+				$.ajax({
+					url:"/update/{{business.id}}",
+					data:{"data":JSON.stringify(data)},
+					method:"POST",
+					success:function(data){
+						alert(data);
+					}
+				});
+			}
+
+	</script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+	<h1>Informazioni generali</h1>
+	{% csrf_token %}
+		<ul id="myTab" class="nav nav-tabs">
+			<li><a href="#general" data-toggle="tab">Informazioni Generali</a></li>
+			<li><a href="#address" data-toggle="tab">Indirizzo</a></li>
+			<li><a href="#contact" data-toggle="tab">Contatti</a></li>
+			<li><a href="#internet" data-toggle="tab">Accesso a Iternet</a></li>
+			<li><a href="#payment_credit" data-toggle="tab">Pagamenti</a></li>
+		</ul>
+		<div id="tab-content" class="tab-content">
+		   <div class="tab-pane active" id="general">
+		      {% include "parts/general.html" %}
+		   </div>
+		   <div class="tab-pane" id="address">
+		      {% include "parts/address.html" %}
+		   </div>
+		   <div class="tab-pane " id="contact">
+		      {% include "parts/contact.html" %}
+		   </div>
+		   <div class="tab-pane " id="internet">
+		      {% include "parts/internet.html" %}
+		   </div>
+		   <div class="tab-pane " id="payment_credit">
+		      {% include "parts/payment_credit.html" %}
+		   </div>
+		</div>
+		<div id="send" class="btn btn-success col-xs-12" onclick="javascript:update();">Salva</div>
+</div>
+{% endblock %}

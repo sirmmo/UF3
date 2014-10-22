@@ -47,7 +47,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">UrbanFabric 3.0 - {{name}}</a>
+					<a class="navbar-brand" href="/">UrbanFabric 3.0 - {{name}}</a>
 				</div>
 
 				<!-- Collect the nav links, forms, and other content for toggling -->
@@ -64,14 +64,21 @@
 						<li><a href="/stats"><i class="fa fa-user fa-fw"></i>Statistiche</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
+					{% if logged %}
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i>Marco<span class="caret"></span></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i>{{user.username}}<span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a href="#"><i class="fa fa-user fa-fw"></i>Profilo</a></li>
-								<li><a href="#"><i class="fa fa-bars fa-fw"></i>Modifica</a></li>
-								<li><a href="#"><i class="fa fa-plus fa-fw"></i>Aggiungi</a></li>
+								<li><a href="/users/{{user.username}}"><i class="fa fa-user fa-fw"></i>Profilo</a></li>
+								{% for biz in businesses %}
+								<li><a href="/edit/{{biz.id}}"><i class="fa fa-bars fa-fw"></i>Modifica {{biz.j.tag.name}}</a></li>
+								{% endfor %}
+								<li><a href="/add"><i class="fa fa-plus fa-fw"></i>Aggiungi</a></li>
+								<li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
 							</ul>
 						</li>
+					{% else %}
+					<li><a href="/login"><i class="fa fa-sign-in fa-fw"></i>Login</a></li>
+					{% endif %}
 					</ul>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->

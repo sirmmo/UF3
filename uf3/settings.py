@@ -102,3 +102,10 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend',
     )
+
+
+OSM_USER="uf3_bot2"
+OSM_PASSWORD="uf3b0tpw"
+
+SOCIAL_AUTH_TWITTER_KEY = 'epcu2WLxge5Rn7oBZ7UCv7vEn'
+SOCIAL_AUTH_TWITTER_SECRET = 'CRd6y3wq0j0pHX43JcxlrJ9SIty4E5suWBhDCVJxvEsFLOXJCl' 
