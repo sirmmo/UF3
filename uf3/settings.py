@@ -55,6 +55,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     'social.apps.django_app.context_processors.backends',
     'social.apps.django_app.context_processors.login_redirect',
+    'biz.processor.req'
  )
 
 ROOT_URLCONF = 'uf3.urls'
@@ -106,6 +107,3 @@ AUTHENTICATION_BACKENDS = (
 
 OSM_USER="uf3_bot2"
 OSM_PASSWORD="uf3b0tpw"
-
-SOCIAL_AUTH_TWITTER_KEY = 'epcu2WLxge5Rn7oBZ7UCv7vEn'
-SOCIAL_AUTH_TWITTER_SECRET = 'CRd6y3wq0j0pHX43JcxlrJ9SIty4E5suWBhDCVJxvEsFLOXJCl' 

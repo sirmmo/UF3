@@ -64,7 +64,10 @@
 						<li><a href="/stats"><i class="fa fa-user fa-fw"></i>Statistiche</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-					{% if logged %}
+						{% if user.is_anonymous %}
+						<li><a href="/login"><i class="fa fa-sign-in fa-fw"></i>Login</a></li>
+						
+						{% else %}
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-user"></i>{{user.username}}<span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
@@ -76,9 +79,7 @@
 								<li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
 							</ul>
 						</li>
-					{% else %}
-					<li><a href="/login"><i class="fa fa-sign-in fa-fw"></i>Login</a></li>
-					{% endif %}
+						{% endif %}
 					</ul>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->

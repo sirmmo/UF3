@@ -7,16 +7,12 @@ from osmapi import OsmApi
 from django.conf import settings
 from biz.models import * 
 from django.views.decorators.csrf import csrf_exempt
-# THE MAGIC http://taginfo.openstreetmap.org/api/4/key/values?key=shop&page=1&rp=10&sortname=count_ways&sortorder=desc&query=stor
+
+from django.contrib.auth.decorators import login_required
+
 
 def index(request):
-	data = {}
-	data["logged"] = not request.user.is_anonymous()
-	if request.user.is_anonymous():
-		data["businesses"] = []
-	else:
-		data["businesses"] = Business.objects.filter(owner=request.user)
-	return render(request, "map.html", data)
+	return render(request, "map.html")
 
 def stats(request):
 	return render(request, "stats.html")
@@ -35,12 +31,14 @@ def profile(request):
 	return HttpResponseRedirect("/users/%s" % request.user.username)
 
 def user(request, username):
-	return render(request, "profile.html", {"user":request.user, "me":request.user.username==username})
+	return render(request, "profile.html", {"me":request.user.username==username})
 
 def geojson(request):
 	ret = []
 	for b in Business.objects.all():
 		data = json.loads(b.cached)
+		if not "name" in data["tag"]:
+			data["tag"]["name"] = str(b.osm_id)
 		to_add = {
 		  "type": "Feature",
 		  "geometry": {
@@ -60,6 +58,7 @@ def complex(request):
 		ret.append(json.loads(b.cached))
 	return HttpResponse(json.dumps(ret))
 
+@login_required
 def add(request):
 	if request.method == "GET":
 		return render(request, "add_point.html")

@@ -34,7 +34,7 @@
 				UF.hash = L.hash(UF.map);
 
 				var geojsonMarkerOptions = {
-				    radius: 10,
+				    radius: 6,
 				    fillColor: "#ff7800",
 				    color: "#000",
 				    weight: 1,
@@ -48,9 +48,16 @@
 					        return L.circleMarker(latlng, geojsonMarkerOptions);
 					    },
 					    onEachFeature: function(feature, layer) {
-						    // does this feature have a property named popupContent?
+						    
+						    content = "<div>";
+						    content += "<h2>" + feature.properties.name + "</h2>";
+						    content += "<table width='100%'>";
+						    for (var x in feature.properties){
+						    	content +="<tr><td>"+x+"</td><td>"+feature.properties[x]+"</td></tr>";
+						    }
+						    content +="</table></div>"
 						    if (feature.properties && feature.properties.name) {
-						        layer.bindPopup(feature.properties.name);
+						        layer.bindPopup(content);
 						    }
 						}
 

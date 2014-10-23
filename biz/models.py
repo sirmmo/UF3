@@ -23,15 +23,17 @@ class Business(models.Model):
 		MyApi = OsmApi()
 		data = MyApi.NodeGet(self.osm_id)
 		self.cached = json.dumps(data)
-		super(Business, self).save(force_insert=False, force_update=True )
-
+		if self.id is not None:
+			super(Business, self).save(force_insert=False, force_update=True )
+		else:
+			super(Business, self).save()
 	def __str__(self):
 		try:
 			a = self.cached
 			name = json.loads(a).get("tag").get("name")
 			t = json.loads(a).get("tag").get("office")
 			o = json.loads(a).get("tag").get("operator")
-			return name if name is not None else t if t is not None else o if o is not None else "negozio"
+			return name if name is not None else t if t is not None else o if o is not None else str(self.osm_id)
 		except:
 			return "ERRORE"
 
