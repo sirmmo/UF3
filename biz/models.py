@@ -41,10 +41,6 @@ class Business(models.Model):
 	def j(self):
 		return json.loads(self.cached)
 
-	@property
-	def safej(self):
-		return json.dumps(json.loads(self.cached))
-
 	def update(self):
 		MyApi = OsmApi()
 		data = MyApi.NodeGet(self.osm_id)

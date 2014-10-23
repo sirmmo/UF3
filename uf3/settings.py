@@ -12,7 +12,13 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-import local_settings
+try:
+    from  local_settings import *
+    print "imported locals"
+except:
+    print "fail locals"
+
+    pass
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -97,10 +103,8 @@ STATIC_URL = '/static/'
 
 AUTHENTICATION_BACKENDS = (
         
-    'social.backends.google.GoogleOpenId',
-    'social.backends.google.GoogleOAuth2',
-    'social.backends.google.GoogleOAuth',
     'social.backends.twitter.TwitterOAuth',
+    'social.backends.openstreetmap.OpenStreetMapOAuth',
     'django.contrib.auth.backends.ModelBackend',
     )
 

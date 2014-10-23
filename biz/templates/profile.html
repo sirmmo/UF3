@@ -9,4 +9,17 @@
 			<h1>{{user.username}}</h1>
 		</div>
 	</div>
+
+	<div class="container">
+		{% for backend in backends.associated %}
+		<div class="row">
+			<a class="btn btn-success col-xs-12" href="/disconnect/{{backend.provider}}">Disconnetti il tuo account {{backend.provider}}</a>
+		</div>
+		{% endfor %}
+		{% for backend in backends.not_associated %}
+		<div class="row">
+			<a class="btn btn-success col-xs-12" href="/login/{{backend}}">Associa il tuo account {{backend}}</a>
+		</div>
+		{% endfor %}
+	</div>
 {% endblock %}
